@@ -15,22 +15,22 @@ import {
   View
 } from 'react-native';
 
+const QRView = require('./qrview');
 
 const onScanButtonPressed = () => {
 };
 
-
+/* <Button
+ * onPress={onScanButtonPressed}
+ * title="Scan"
+ * color="#841584"
+ * accessibilityLabel="Scan"
+ * />*/
+/* <View style={styles.container}>*/
 export default class qrcode_scanner extends Component {
   render() {
     return (
-      <View style={styles.container}>
-      <Button
-      onPress={onScanButtonPressed}
-      title="Scan"
-      color="#841584"
-      accessibilityLabel="Scan"
-      />
-      </View>
+      <QRView style={styles.container}/>
     );
   }
 }

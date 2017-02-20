@@ -1,10 +1,11 @@
 'use strict';
-import {OT, AT, Resource, Action, Reducer} from './pojo.js';
+import {OT, AT, Resource, Action, Reducer, InitState} from './pojo.js';
 ////////////////////////react native dependency starts here
 //const QRView = require('./qrview');
 import { createStore, combineReducers } from 'redux';
 import React, {Component, PropTypes} from 'react';
 import { connect, Provider } from 'react-redux';
+import {PermissionsAndroid} from 'react-native';
 import {
     Button,
     AppRegistry,
@@ -15,35 +16,35 @@ import {
 import './pojo.js';
 
 ////////////components
-const App = () => connect()(
-    (state) => ({camPermissionGranted : state.camPermissionGranted, currentOperation: state.operation}),
-    (dispatch) => ({onCamPermissionGranted: (granted) => dispatch(Action.camPermission(granted))})
-)((_=>{
-    const app = ({camPermissionGranted, currentOperation, onCamPermissionGranted}) => {
-        if (!camPermissionGranted){
-            requestCameraPermission(onCamPermissionGranted);
-            return <Text style={styles.instructions}>{Resource.CAM_PERMISSION_REQUEST_MSG}</Text>
-        }
-        return <Text style={styles.welcome}>WIP</Text>
-    };
-    app.propTypes = {
-        camPermissionGranted: PropTypes.bool.isRequired,
-        currentOperation: PropTypes.string.isRequired,
-        onCamPermissionGranted: PropTypes.func.isRequired
-    };
-})());
 
+const _app = ({camPermissionGranted, currentOperation, onCamPermissionGranted}) => {
+    if (!camPermissionGranted){
+        requestCameraPermission(onCamPermissionGranted);
+        return <Text style={styles.instructions}>{Resource.CAM_PERMISSION_REQUEST_MSG}</Text>
+    }
+    return <Text style={styles.welcome}>WIP</Text>
+};
+_app.propTypes = {
+    camPermissionGranted: PropTypes.bool.isRequired,
+    currentOperation: PropTypes.string.isRequired,
+    onCamPermissionGranted: PropTypes.func.isRequired
+};
+const App = connect(
+    (state) => ({camPermissionGranted : state.camPerm, currentOperation: state.op}),
+    (dispatch) => ({onCamPermissionGranted: (granted) => dispatch(Action.camPermission(granted))})
+)(_app);
 
 ///////////fire it up
-const store = createStore(combineReducers(Reducer));
+const store = createStore(Reducer);
+console.log(store.getState())
 export default class qrcode_scanner extends Component {
     render() {
         return (
             <Provider store={store}>
                 <App />
             </Provider>
-        );
-    }
+        )
+    };
 }
 AppRegistry.registerComponent('qrcode_scanner', () => qrcode_scanner);
 

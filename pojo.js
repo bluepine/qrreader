@@ -22,19 +22,20 @@ const Action = {
 };
 
 ///////////reducers and inital state
-const InitState = {camPerm: false, op: OT.MENU};
-const _rg = handlers => (state = InitState, action)  => {
+const _rg = (handlers, initState) => (state = initState, action)  => {
     if (!action.hasOwnProperty('type')) {
-        console.log(`not type in action: ${action}`);
+        console.log(`no type in action: ${action}`);
         return state;
     }
     return action.type in handlers ? handlers[action.type](state, action) : state;
 };
 const _newState = (state, change) =>  Object.assign({}, state, change);
-const Reducer = {
-    permChange: _rg({
+const Reducer = _rg(
+    {
         [AT.CAM_PERM_CHANGE] : (state, action) => (_newState({camPerm: action.payload}))
-    })
-};
+    },
+    {camPerm: false, op: OT.MENU}
+);
+
 
 export {OT, AT, Resource, Action, Reducer};

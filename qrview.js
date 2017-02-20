@@ -8,4 +8,5 @@ var iface = {
   }
 };
 
-module.exports = requireNativeComponent('QRView', iface);
+const QRView = requireNativeComponent('QRView', iface);
+export default QRView;

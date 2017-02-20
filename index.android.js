@@ -1,7 +1,7 @@
 'use strict';
-import {OT, AT, Resource, Action, Reducer, InitState} from './pojo.js';
+import {OT, AT, Resource, Action, Reducer} from './pojo.js';
 ////////////////////////react native dependency starts here
-const QRView = require('./qrview');
+import QRView from './qrview.js';
 import { createStore, combineReducers } from 'redux';
 import React, {Component, PropTypes} from 'react';
 import { connect, Provider } from 'react-redux';

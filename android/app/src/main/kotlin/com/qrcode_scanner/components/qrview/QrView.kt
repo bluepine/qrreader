@@ -3,6 +3,7 @@ package com.qrcode_scanner.components.qrview
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.PointF
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.Log
@@ -18,7 +19,13 @@ import hugo.weaving.DebugLog
  * Created by swei on 2/11/17.
  */
 
-class QrView : QRCodeReaderView, Component {
+class QrView : QRCodeReaderView, Component, QRCodeReaderView.OnQRCodeReadListener {
+    @DebugLog
+    override fun onQRCodeRead(text: String?, points: Array<out PointF>?) {
+        toast(context, text ?: "empty")
+
+    }
+
     val TAG: String by lazy { getLogTag(this) }
     private val CAM_PERM_ERROR_MSG = "Failed to get camera permission"
 
@@ -31,6 +38,8 @@ class QrView : QRCodeReaderView, Component {
     }
 
     private fun init() {
+        setOnQRCodeReadListener(this)
+
         // Use this function to enable/disable decoding
         setQRDecodingEnabled(true)
 
@@ -45,6 +54,7 @@ class QrView : QRCodeReaderView, Component {
 
         // Use this function to set back camera preview
         setBackCamera();
+
     }
 
     private fun hasCamPerm(): Boolean {

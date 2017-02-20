@@ -7,7 +7,10 @@ const OT = {
 };
 //redux action type
 const AT = {
-    CAM_PERM_CHANGE : 'CAM_PERM_CHANGE'
+    CAM_PERM_CHANGE : 'CAM_PERM_CHANGE',
+    MENU : 'MENU',
+    QRVIEW : 'QRVIEW',
+    QRCODE : 'QRCODE'
 };
 
 const Resource = {
@@ -18,24 +21,29 @@ const Resource = {
 ////////////action creators
 //loosely following https://github.com/acdlite/redux-actions for action format
 const Action = {
-    camPermission : (granted) => ({type: AT.CAM_PERM_CHANGE, payload: granted})
+    camPermission : (granted) => ({type: AT.CAM_PERM_CHANGE, payload: granted}),
+    qrcode : (msg) => ({type: AT.QRCODE, payload: msg}),
+    qrview : () => ({type: AT.QRVIEW})
 };
 
 ///////////reducers and inital state
-const _rg = (handlers, initState) => (state = initState, action)  => {
+const generateReducer = (handlers, initState) => (state = initState, action)  => {
     if (!action.hasOwnProperty('type')) {
         console.log(`no type in action: ${action}`);
         return state;
     }
     return action.type in handlers ? handlers[action.type](state, action) : state;
 };
-const _newState = (state, change) =>  Object.assign({}, state, change);
-const Reducer = _rg(
+const newState = (state, change) =>  Object.assign({}, state, change);
+const Reducer = generateReducer(
     {
-        [AT.CAM_PERM_CHANGE] : (state, action) => (_newState(state, {camPerm: action.payload}))
+        [AT.CAM_PERM_CHANGE] : (state, action) => (newState(state, {camPerm: action.payload})),
+        [AT.MENU] : (state, action) => (newState(state, {op: OT.MENU})),
+        [AT.QRVIEW] : (state, action) => (newState(state, {op: OT.QRVIEW})),
+        [AT.QRCODE] : (state, action) => (newState(state, {qrcode: action.payload, op: OT.MENU}))
     },
-    {camPerm: false, op: OT.MENU}
+    {camPerm: false, op: OT.MENU, qrcode:null}
 );
 
 
-export {OT, AT, Resource, Action, Reducer};
+export {OT, Resource, Action, Reducer};

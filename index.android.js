@@ -1,5 +1,5 @@
 'use strict';
-import {OT, AT, Resource, Action, Reducer} from './pojo.js';
+import {OT, Resource, Action, Reducer} from './pojo.js';
 ////////////////////////react native dependency starts here
 import QRView from './qrview.js';
 import { createStore, combineReducers } from 'redux';
@@ -18,27 +18,62 @@ import './pojo.js';
 
 ////////////components
 
-const _app = ({camPermissionGranted, currentOperation, onCamPermissionGranted}) => {
+const _app = ({camPermissionGranted,
+               currentOperation,
+               onCamPermissionGranted,
+               onQrCodeDecoded,
+               qrcodeText,
+               onStartQrViewButtonClicked}) => {
     if (!camPermissionGranted) {
         requestCameraPermission(onCamPermissionGranted);
         return <Text style={styles.instructions}>{Resource.CAM_PERMISSION_REQUEST_MSG}</Text>
     }
-    //    return <Text style={styles.welcome}>WIP</Text>
-    return <QRView
-    style={styles.container}
-    onQrCodeDecoded={(msg) => {
-        ToastAndroid.show(msg, ToastAndroid.SHORT);
-        console.log(msg)}}
+    if (currentOperation === OT.QRVIEW) {
+        return <QRView
+                   style={styles.container}
+                   onQrCodeDecoded={onQrCodeDecoded}
+               />
+    }
+    if (currentOperation === OT.MENU) {
+        return (
+        <View style={styles.container}>
+        <Text style={styles.welcome}>
+         {qrcodeText}
+        </Text>
+        <Button
+            onPress={onStartQrViewButtonClicked}
+            title="Scan QR code"
+            color="#841584"
+            accessibilityLabel="Scan QR code"
         />
+        </View>
+        )
+    }
+
+    return <Text style={styles.welcome}>App is in unknown state</Text>
+
 };
+
 _app.propTypes = {
     camPermissionGranted: PropTypes.bool.isRequired,
     currentOperation: PropTypes.string.isRequired,
-    onCamPermissionGranted: PropTypes.func.isRequired
+    qrcodeText: PropTypes.string.isRequired,
+    onCamPermissionGranted: PropTypes.func.isRequired,
+    onQrCodeDecoded: PropTypes.func.isRequired,
+    onStartQrViewButtonClicked: PropTypes.func.isRequired
 };
+
 const App = connect(
-    (state) => ({camPermissionGranted : state.camPerm, currentOperation: state.op}),
-    (dispatch) => ({onCamPermissionGranted: (granted) => dispatch(Action.camPermission(granted))})
+    (state) => ({
+        camPermissionGranted : state.camPerm,
+        currentOperation: state.op,
+        qrcodeText: state.qrcode === null ? 'No qrcode scanned' :`last scanned qrcode: ${state.qrcode}`
+    }),
+    (dispatch) => ({
+        onCamPermissionGranted: (granted) => dispatch(Action.camPermission(granted)),
+        onQrCodeDecoded: (msg) => dispatch(Action.qrcode(msg)),
+        onStartQrViewButtonClicked: () => dispatch(Action.qrview())
+    })
 )(_app);
 
 ///////////fire it up

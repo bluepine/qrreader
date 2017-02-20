@@ -1,10 +1,10 @@
-import {OT, AT, Resource, Action, Reducer} from './pojo.js';
+import {OT, Resource, Action, Reducer} from './pojo.js';
 
 test('reducer', ()=>{
     expect(
         Reducer(undefined, {})
     ).toEqual(
-        {camPerm: false, op: OT.MENU}
+        {"camPerm": false, "op": "menu", "qrcode": null}
     );
     expect(
         Reducer({}, Action.camPermission(true))
@@ -14,6 +14,6 @@ test('reducer', ()=>{
     expect(
         Reducer(Reducer(undefined, {}), Action.camPermission(true))
     ).toEqual(
-        { camPerm: true, op: OT.MENU}
+        {"camPerm": true, "op": "menu", "qrcode": null}
     );
 });

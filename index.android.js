@@ -1,7 +1,7 @@
 'use strict';
 import {OT, AT, Resource, Action, Reducer, InitState} from './pojo.js';
 ////////////////////////react native dependency starts here
-//const QRView = require('./qrview');
+const QRView = require('./qrview');
 import { createStore, combineReducers } from 'redux';
 import React, {Component, PropTypes} from 'react';
 import { connect, Provider } from 'react-redux';
@@ -22,7 +22,8 @@ const _app = ({camPermissionGranted, currentOperation, onCamPermissionGranted}) 
         requestCameraPermission(onCamPermissionGranted);
         return <Text style={styles.instructions}>{Resource.CAM_PERMISSION_REQUEST_MSG}</Text>
     }
-    return <Text style={styles.welcome}>WIP</Text>
+    //    return <Text style={styles.welcome}>WIP</Text>
+    return <QRView style={styles.container}/>
 };
 _app.propTypes = {
     camPermissionGranted: PropTypes.bool.isRequired,
@@ -80,8 +81,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF'
+        alignItems: 'center'
     },
     welcome: {
         fontSize: 20,

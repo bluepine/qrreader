@@ -55,7 +55,7 @@ AppRegistry.registerComponent('qrcode_scanner', () => qrcode_scanner);
 //////////lower level operations
 async function requestCameraPermission(callback) {
     try {
-        const granted = await PermissionsAndroid.requestPermission(
+        const granted = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.CAMERA,
             {
                 'title': 'QRCode scanner App Camera Permission',

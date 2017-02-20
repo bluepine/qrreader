@@ -32,7 +32,7 @@ const _rg = (handlers, initState) => (state = initState, action)  => {
 const _newState = (state, change) =>  Object.assign({}, state, change);
 const Reducer = _rg(
     {
-        [AT.CAM_PERM_CHANGE] : (state, action) => (_newState({camPerm: action.payload}))
+        [AT.CAM_PERM_CHANGE] : (state, action) => (_newState(state, {camPerm: action.payload}))
     },
     {camPerm: false, op: OT.MENU}
 );

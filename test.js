@@ -11,4 +11,9 @@ test('reducer', ()=>{
     ).toEqual(
         { camPerm: true }
     );
+    expect(
+        Reducer(Reducer(undefined, {}), Action.camPermission(true))
+    ).toEqual(
+        { camPerm: true, op: OT.MENU}
+    );
 });

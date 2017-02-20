@@ -23,7 +23,8 @@ const Resource = {
 const Action = {
     camPermission : (granted) => ({type: AT.CAM_PERM_CHANGE, payload: granted}),
     qrcode : (msg) => ({type: AT.QRCODE, payload: msg}),
-    qrview : () => ({type: AT.QRVIEW})
+    qrview : () => ({type: AT.QRVIEW}),
+    menu : () => ({type: AT.MENU})
 };
 
 ///////////reducers and inital state

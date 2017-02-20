@@ -12,7 +12,8 @@ import {
     Text,
     View,
     ToastAndroid,
-    PermissionsAndroid
+    PermissionsAndroid,
+    BackAndroid
 } from 'react-native';
 import './pojo.js';
 
@@ -79,6 +80,8 @@ const App = connect(
 ///////////fire it up
 const store = createStore(Reducer);
 console.log(store.getState())
+BackAndroid.addEventListener('hardwareBackPress', () => store.dispatch(Action.menu()));
+
 export default class qrcode_scanner extends Component {
     render() {
         return (
@@ -135,17 +138,3 @@ const styles = StyleSheet.create({
         marginBottom: 5
     }
 });
-
-
-// const onScanButtonPressed = () => {
-// };
-
-/* <Button
- * onPress={onScanButtonPressed}
- * title="Scan"
- * color="#841584"
- * accessibilityLabel="Scan"
- * />*/
-/* <View style={styles.container}>*/
-
-/* <QRView style={styles.container}/>*/

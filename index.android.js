@@ -1,10 +1,10 @@
-// following design guides here: https://github.com/reactjs/redux/blob/master/docs/basics/UsageWithReact.md
 'use strict';
-////////////imports
+import {OT, AT, Resource, Action, Reducer} from './pojo.js';
+////////////////////////react native dependency starts here
+//const QRView = require('./qrview');
 import { createStore, combineReducers } from 'redux';
 import React, {Component, PropTypes} from 'react';
-import { connect } from 'react-redux';
-
+import { connect, Provider } from 'react-redux';
 import {
     Button,
     AppRegistry,
@@ -12,30 +12,7 @@ import {
     Text,
     View
 } from 'react-native';
-
-const QRView = require('./qrview');
-
-////////////globals
-const OT {
-    //operation type
-    MENU : Symbol('menu'),
-    QRVIEW : Symbol('qrview')
-}
-const AT = {
-    //redux action type
-    CAM_PERM_CHANGE : Symbol('CAM_PERM_CHANGE')
-}
-
-const Resource = {
-    CAM_PERMISSION_REQUEST_MSG : 'QRCode scanner needs access to your camera so you can scan qr codes.'
-}
-
-
-////////////action creators
-//loosely following https://github.com/acdlite/redux-actions for action format
-const Action = {
-    camPermission : (granted) => ({type: AT.CAM_PERM_CHANGE, payload: granted}),
-}
+import './pojo.js';
 
 ////////////components
 const App = () => connect()(
@@ -51,23 +28,14 @@ const App = () => connect()(
     };
     app.propTypes = {
         camPermissionGranted: PropTypes.bool.isRequired,
-        currentOperation: PropTypes.symbol.isRequired,
+        currentOperation: PropTypes.string.isRequired,
         onCamPermissionGranted: PropTypes.func.isRequired
     };
 })());
 
-///////////reducers
-const InitState = {camPerm: false, op: QT.MENU};
-const _rg = handlers => (state = InitState, action)  => action.type in handlers ? handlers[action.type](state, action) : console.log(`action type ${action.type} not handled`);
 
-const Reducer = {
-    permChange: _rg({
-        [AT.CAM_PERM_CHANGE] : (state, action) => ({...state, camPerm: action.payload})
-    })
-}
-
+///////////fire it up
 const store = createStore(combineReducers(Reducer));
-
 export default class qrcode_scanner extends Component {
     render() {
         return (
@@ -77,14 +45,13 @@ export default class qrcode_scanner extends Component {
         );
     }
 }
-
 AppRegistry.registerComponent('qrcode_scanner', () => qrcode_scanner);
 
 
 
 
 
-////lib
+//////////lower level operations
 async function requestCameraPermission(callback) {
     try {
         const granted = await PermissionsAndroid.requestPermission(

@@ -41,10 +41,10 @@ class QrView : QRCodeReaderView, Component {
         setTorchEnabled(true)
 
         // Use this function to set front camera preview
-        setFrontCamera()
+//        setFrontCamera()
 
         // Use this function to set back camera preview
-        //        setBackCamera();
+        setBackCamera();
     }
 
     private fun hasCamPerm(): Boolean {

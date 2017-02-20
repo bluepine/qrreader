@@ -11,6 +11,9 @@ import android.view.SurfaceHolder
 import android.view.View
 import android.widget.Toast
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.ReactContext
+import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.qrcode_scanner.components.Component
 import hugo.weaving.DebugLog
 
@@ -22,11 +25,18 @@ import hugo.weaving.DebugLog
 class QrView : QRCodeReaderView, Component, QRCodeReaderView.OnQRCodeReadListener {
     @DebugLog
     override fun onQRCodeRead(text: String?, points: Array<out PointF>?) {
-        toast(context, text ?: "empty")
-
+        val message = text ?: "empty"
+        Log.d(TAG, "onQRCodeRead:" + message)
+        val event = Arguments.createMap()
+        event.putString("message", message)
+        val reactContext = context as ReactContext
+        reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(
+                id,
+                "topChange",
+                event)
     }
 
-    val TAG: String by lazy { getLogTag(this) }
+    val TAG = getLogTag(this)
     private val CAM_PERM_ERROR_MSG = "Failed to get camera permission"
 
     constructor(context: Context) : super(context) {
@@ -53,7 +63,7 @@ class QrView : QRCodeReaderView, Component, QRCodeReaderView.OnQRCodeReadListene
 //        setFrontCamera()
 
         // Use this function to set back camera preview
-        setBackCamera();
+        setBackCamera()
 
     }
 

@@ -5,25 +5,31 @@ import QRView from './qrview.js';
 import { createStore, combineReducers } from 'redux';
 import React, {Component, PropTypes} from 'react';
 import { connect, Provider } from 'react-redux';
-import {PermissionsAndroid} from 'react-native';
 import {
     Button,
     AppRegistry,
     StyleSheet,
     Text,
-    View
+    View,
+    ToastAndroid,
+    PermissionsAndroid
 } from 'react-native';
 import './pojo.js';
 
 ////////////components
 
 const _app = ({camPermissionGranted, currentOperation, onCamPermissionGranted}) => {
-    if (!camPermissionGranted){
+    if (!camPermissionGranted) {
         requestCameraPermission(onCamPermissionGranted);
         return <Text style={styles.instructions}>{Resource.CAM_PERMISSION_REQUEST_MSG}</Text>
     }
     //    return <Text style={styles.welcome}>WIP</Text>
-    return <QRView style={styles.container}/>
+    return <QRView
+    style={styles.container}
+    onQrCodeDecoded={(msg) => {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+        console.log(msg)}}
+        />
 };
 _app.propTypes = {
     camPermissionGranted: PropTypes.bool.isRequired,

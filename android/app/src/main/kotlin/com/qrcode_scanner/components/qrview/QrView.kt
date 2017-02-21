@@ -54,7 +54,7 @@ class QrView : QRCodeReaderView, Component, QRCodeReaderView.OnQRCodeReadListene
         setQRDecodingEnabled(true)
 
         // Use this function to change the autofocus interval (default is 5 secs)
-        setAutofocusInterval(2000L)
+        setAutofocusInterval(5000L)
 
         // Use this function to enable/disable Torch
         setTorchEnabled(true)

@@ -1,3 +1,4 @@
+'use strict';
 import {generateReducer, newState} from './lib.js';
 ////////////scp view
 

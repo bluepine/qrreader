@@ -1,3 +1,4 @@
+import {PropTypes} from 'react';
 import { connect } from 'react-redux';
 const SCPView = {};
 const _scpView = (

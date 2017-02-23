@@ -1,3 +1,4 @@
+'use strict';
 import {generateReducer, newState} from './lib.js';
 // following design guides here: https://github.com/reactjs/redux/blob/master/docs/basics/UsageWithReact.md
 ////////////globals
@@ -37,4 +38,4 @@ const Reducer = generateReducer(
     {camPerm: false, op: OT.MENU, qrcode:null}
 );
 
-export {OT, Resource, Action, Reducer};
+export {OT, Action, Reducer};

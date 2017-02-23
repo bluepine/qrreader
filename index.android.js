@@ -1,6 +1,6 @@
 'use strict';
-import {OT, Resource, Action, Reducer} from './app.redux.js';
-import {Resource, Style} from './res.js'
+import {OT, Action, Reducer} from './app.redux.js';
+import {Resource, Styles} from './res.js'
 ////////////////////////react native dependency starts here
 import { createStore, combineReducers } from 'redux';
 import React, {Component, PropTypes} from 'react';
@@ -8,7 +8,6 @@ import { connect, Provider } from 'react-redux';
 import {
     Button,
     AppRegistry,
-    StyleSheet,
     Text,
     View,
     ToastAndroid,

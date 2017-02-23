@@ -1,3 +1,4 @@
+'use strict';
 import {OT, Resource, Action, Reducer} from './app.redux.js';
 
 test('reducer', ()=>{

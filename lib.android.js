@@ -1,3 +1,5 @@
+'use strict';
+import {Resource} from './res.js';
 import {
     PermissionsAndroid
 } from 'react-native';

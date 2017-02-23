@@ -1,4 +1,4 @@
-import {OT, Resource, Action, Reducer} from './pojo.js';
+import {OT, Resource, Action, Reducer} from './app.redux.js';
 
 test('reducer', ()=>{
     expect(

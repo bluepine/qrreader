@@ -1,6 +1,6 @@
 'use strict';
 import AppRedux from './app.redux.js';
-
+import SCPViewRedux from './scpview.redux.js';
 test('reducer', ()=>{
     expect(
         AppRedux.Reducer(undefined, {})
@@ -16,5 +16,10 @@ test('reducer', ()=>{
         AppRedux.Reducer(AppRedux.Reducer(undefined, {}), AppRedux.Action.camPermission(true))
     ).toEqual(
         {"camPerm": true, "op": "menu", "qrcode": null}
+    );
+    expect(
+        SCPViewRedux.Reducer(SCPViewRedux.Reducer(undefined, {}), SCPViewRedux.Action.init('abc'))
+    ).toEqual(
+        {msg: 'abc', op: SCPViewRedux.OT.INPUT, host: null, path: null, success: false, error: null, password: null}
     );
 });

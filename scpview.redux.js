@@ -18,14 +18,13 @@ const Action = {
 };
 const Reducer = generateReducer(
     {
-        [AT.INIT] : (state, action) => {
-            console.log(action);
-            return newState(state, {
+        [AT.INIT] : (state, action) => (
+            newState(state, {
                 op: OT.INPUT,
                 msg: action.payload,
                 success: false,
                 error: null
-            });},
+            })),
 
         [AT.SEND] : (state, action) => (newState(state, {
             op: OT.SEND,

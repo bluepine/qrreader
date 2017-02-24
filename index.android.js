@@ -91,7 +91,7 @@ const App = connect(
     }),
     (dispatch) => ({
         onCamPermissionGranted: (granted) => dispatch(AppRedux.Action.camPermission(granted)),
-        onQrCodeDecoded: (msg) => {dispatch(AppRedux.Action.qrcode(msg)); dispatch(SCPViewRedux.Action.init(msg))},
+        onQrCodeDecoded: (msg) => {dispatch(AppRedux.Action.qrcode(msg)), dispatch(SCPViewRedux.Action.init(msg))},
         onStartQrViewButtonClicked: () => dispatch(AppRedux.Action.qrview()),
         onSendQrCodeButtonClicked: () => dispatch(AppRedux.Action.sendcode())
     })
@@ -102,11 +102,6 @@ const store = createStore(combineReducers({
     [AppRedux.Name]: AppRedux.Reducer,
     [SCPViewRedux.Name]: SCPViewRedux.Reducer
 }));
-console.log(combineReducers({
-    [AppRedux.Name]: AppRedux.Reducer,
-    [SCPViewRedux.Name]: SCPViewRedux.Reducer
-}))
-console.log(store)
 console.log(store.getState())
 BackAndroid.addEventListener('hardwareBackPress', () => store.dispatch(Action.menu()));
 

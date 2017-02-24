@@ -1,7 +1,7 @@
 'use strict';
-import {generateReducer, newState} from './lib.js';
+import {generateReducer, newState, applyName} from './lib.js';
 // following design guides here: https://github.com/reactjs/redux/blob/master/docs/basics/UsageWithReact.md
-////////////globals
+const Name = 'AppRedux';
 //operation type
 const OT = {
     MENU : 'menu',
@@ -9,13 +9,13 @@ const OT = {
     SENDCODE : 'sendcode'
 };
 //redux action type
-const AT = {
+const AT = applyName(Name, {
     CAM_PERM_CHANGE : 'CAM_PERM_CHANGE',
     MENU : 'MENU',
     QRVIEW : 'QRVIEW',
     QRCODE : 'QRCODE',
     SENDCODE : 'SENDCODE'
-};
+});
 
 ////////////action creators
 //loosely following https://github.com/acdlite/redux-actions for action format
@@ -36,8 +36,8 @@ const Reducer = generateReducer(
         [AT.QRCODE] : (state, action) => (newState(state, {qrcode: action.payload, op: OT.MENU})),
         [AT.SENDCODE] : (state, action) => (state.qrcode == null ? state : newState(state, {qrcode: action.payload, op: OT.SENDCODE}))
     },
-    {camPerm: false, op: OT.MENU, qrcode:null}
+    {camPerm: false, op: OT.MENU, qrcode: null}
 );
 
-const AppRedux = {OT, Action, Reducer, name: 'AppRedux'};
+const AppRedux = {OT, Action, Reducer, Name};
 export default AppRedux;

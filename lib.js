@@ -7,4 +7,12 @@ const generateReducer = (handlers, initState) => (state = initState, action)  =>
 };
 const newState = (state, change) =>  Object.assign({}, state, change);
 
-export {generateReducer, newState};
+function applyName(name, input) {
+    const tmp = {};
+    const keys = Object.keys(input);
+    for (var j=0; j < keys.length; j++) {
+        tmp[keys[j]] = input[keys[j]]+'.'+name;
+    }
+    return tmp;
+}
+export {generateReducer, newState, applyName};

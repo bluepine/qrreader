@@ -2,7 +2,6 @@
 import {Resource, Styles} from './res.js'
 import SCPViewRedux from './scpview.redux.js'
 import AppRedux from './app.redux.js'
-//import {OT as scpview_OT, Action as scpview_Action, Reducer as scpview_Reducer} from './scpview.redux.js';
 ////////////////////////react native dependency starts here
 import { createStore, combineReducers } from 'redux';
 import React, {Component, PropTypes} from 'react';
@@ -34,13 +33,13 @@ const _app = (
              requestCameraPermission(onCamPermissionGranted);
              return <Text style={Styles.instructions}>{Resource.CAM_PERMISSION_REQUEST_MSG}</Text>
          }
-         if (currentOperation === OT.QRVIEW) {
+         if (currentOperation === AppRedux.OT.QRVIEW) {
              return <QRView
                         style={Styles.container}
                         onQrCodeDecoded={onQrCodeDecoded}
                     />
          }
-         if (currentOperation === OT.MENU) {
+         if (currentOperation === AppRedux.OT.MENU) {
              return (
                  <View style={Styles.container}>
                      <Text style={Styles.welcome}>
@@ -64,7 +63,7 @@ const _app = (
              )
          }
 
-         if (currentOperation === OT.SENDCODE) {
+         if (currentOperation === AppRedux.OT.SENDCODE) {
              return (
                  <SCPView/>
              )
@@ -86,13 +85,13 @@ _app.propTypes = {
 
 const App = connect(
     (state) => ({
-        camPermissionGranted : state[AppRedux.name].camPerm,
-        currentOperation: state[AppRedux.name].op,
-        qrcodeText: state[AppRedux.name].qrcode === null ? 'No qrcode scanned' :`last scanned qrcode: ${state.qrcode}`
+        camPermissionGranted : state[AppRedux.Name].camPerm,
+        currentOperation: state[AppRedux.Name].op,
+        qrcodeText: state[AppRedux.Name].qrcode === null ? 'No qrcode scanned' :`last scanned qrcode: ${state[AppRedux.Name].qrcode}`
     }),
     (dispatch) => ({
         onCamPermissionGranted: (granted) => dispatch(AppRedux.Action.camPermission(granted)),
-        onQrCodeDecoded: (msg) => dispatch(AppRedux.Action.qrcode(msg)),
+        onQrCodeDecoded: (msg) => {dispatch(AppRedux.Action.qrcode(msg)); dispatch(SCPViewRedux.Action.init(msg))},
         onStartQrViewButtonClicked: () => dispatch(AppRedux.Action.qrview()),
         onSendQrCodeButtonClicked: () => dispatch(AppRedux.Action.sendcode())
     })
@@ -100,9 +99,14 @@ const App = connect(
 
 ///////////fire it up
 const store = createStore(combineReducers({
-    [AppRedux.name]: AppRedux.Reducer,
-    [SCPViewRedux.name]: SCPViewRedux.Reducer
+    [AppRedux.Name]: AppRedux.Reducer,
+    [SCPViewRedux.Name]: SCPViewRedux.Reducer
 }));
+console.log(combineReducers({
+    [AppRedux.Name]: AppRedux.Reducer,
+    [SCPViewRedux.Name]: SCPViewRedux.Reducer
+}))
+console.log(store)
 console.log(store.getState())
 BackAndroid.addEventListener('hardwareBackPress', () => store.dispatch(Action.menu()));
 

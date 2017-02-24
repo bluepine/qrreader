@@ -109,7 +109,16 @@ const store = createStore(combineReducers({
 }),
                           applyMiddleware(createLogger())
 );
-onQrCodeDecoded(store.dispatch)('test')
+
+//testing steps
+store.dispatch(AppRedux.Action.camPermission(true))
+onQrCodeDecoded(store.dispatch)('testcode')
+store.dispatch(AppRedux.Action.sendcode())
+store.dispatch(SCPViewRedux.Action.password('pass'))
+store.dispatch(SCPViewRedux.Action.host('user@host'))
+store.dispatch(SCPViewRedux.Action.path('/home/user/file'))
+store.dispatch(SCPViewRedux.Action.send())
+
 console.log(store.getState())
 BackAndroid.addEventListener('hardwareBackPress', () => store.dispatch(AppRedux.Action.menu()));
 

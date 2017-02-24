@@ -10,9 +10,22 @@ import {
 import SCPViewRedux from './scpview.redux.js'
 import {Styles} from './res.js';
 import {newState} from './lib.js'
+import SSH from 'react-native-ssh';
 
+const sendMsg = (msg, host, path, password, onSuccess, onFailure) => {
+    [user, host] = host.split('@');
+    config = {user, host, password};
+    command = `echo ${msg} > ${path}`;
+    console.log(config)
+    console.log(command)
+    SSH.execute(config, command).then(
+        result => {console.log('result:', result); onSuccess()},
+        error =>  console.log('Error:', onFailure(error))
+    );
+};
+const empty = () => (false);
 const _scpView = ({op, msg, host, path, success, error, password,
-                   onSendBtnClicked, onHostGiven, onPathGiven, onPasswordGiven}) => {
+                   onSendBtnClicked, onHostGiven, onPathGiven, onPasswordGiven, onSuccess, onFailure}) => {
                        const input = op == SCPViewRedux.OT.INPUT
                        let sendOrSending = null;
                        if (input) {
@@ -27,12 +40,24 @@ const _scpView = ({op, msg, host, path, success, error, password,
                                <Text style={Styles.welcome}>Sending</Text>
                            )
                        }
+                       let errorMsg = null;
+                       if (error == null) {
+                           errorMsg = empty;
+                       } else {
+                           errorMsg = (
+                               <Text style={Styles.welcome}>{error}</Text>
+                           );
+                       }
+                       if (!input) {
+                           sendMsg(msg, host, path, password, onSuccess, onFailure);
+                       }
 
                        const ret = (
                            <ScrollView contentContainerStyle={Styles.container}>
-                               <Text style={Styles.welcome}>{'Message to send:\n'}{msg}</Text>
+                               <Text style={Styles.welcome}>{'Message to send through ssh:\n'}{msg}</Text>
+                               {errorMsg}
                                <View style={{flexDirection:'row'}}>
-                                   <TextInput placeholder='host' style={Styles.input} editable = {input}
+                                   <TextInput placeholder='user@host' style={Styles.input} editable = {input}
                                               onChangeText={onHostGiven}
                                               value={host}
                                    />
@@ -70,6 +95,8 @@ SCPView = connect(
         onPasswordGiven: pass => dispatch(SCPViewRedux.Action.password(pass)),
         onHostGiven: host => dispatch(SCPViewRedux.Action.host(host)),
         onPathGiven: path => dispatch(SCPViewRedux.Action.path(path)),
+        onSuccess: () => dispatch(SCPViewRedux.Action.done(true, 'Success')),
+        onFailure: error => dispatch(SCPViewRedux.Action.done(false, ''+error))
     })
 )(_scpView);
 export default SCPView;

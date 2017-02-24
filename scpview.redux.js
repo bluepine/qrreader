@@ -7,14 +7,20 @@ const OT = {
     SEND : 'send'
 };
 const AT = applyName(Name, {
-    INIT: Name+'.INIT',
-    SEND: Name+'.SEND',
-    DONE: 'DONE'
+    INIT: 'INIT',
+    SEND: 'SEND',
+    DONE: 'DONE',
+    PASS: 'PASS',
+    HOST: 'HOST',
+    PATH: 'PATH'
 });
 const Action = {
-    init : (msg) => ({type: AT.INIT, payload: msg}),
-    send : (host, path, password) => ({type: AT.SEND, payload: {host, path, password}}),
-    done : (success, error) => ({type: AT.DONE, payload: {success, error}})
+    init : msg => ({type: AT.INIT, payload: msg}),
+    send : () => ({type: AT.SEND}),
+    done : (success, error) => ({type: AT.DONE, payload: {success, error}}),
+    password : password => ({type: AT.PASS, payload: password}),
+    host : host => ({type: AT.HOST, payload: host}),
+    path : path => ({type: AT.PATH, payload: path})
 };
 const Reducer = generateReducer(
     {
@@ -27,17 +33,23 @@ const Reducer = generateReducer(
             })),
 
         [AT.SEND] : (state, action) => (newState(state, {
-            op: OT.SEND,
-            host: action.payload.host,
-            path: action.payload.path,
-            password: action.payload.password
+            op: OT.SEND
         })),
 
         [AT.DONE] : (state, action) => (newState(state, {
             op: OT.INPUT,
             success: action.payload.success,
             error: action.payload.error
-        }))
+        })),
+
+        [AT.PASS] : (state, action) => (newState(state, {
+            password: action.payload})),
+
+        [AT.HOST] : (state, action) => (newState(state, {
+            host: action.payload})),
+
+        [AT.PATH] : (state, action) => (newState(state, {
+            path: action.payload}))
     },
     {msg: null, op: OT.INPUT, host: null, path: null, success: false, error: null, password: null}
 );

@@ -45,4 +45,5 @@ const Reducer = generateReducer(
     {msg: null, op: OT.INPUT, host: null, path: null, success: false, error: null, password: null}
 );
 
-export {Action, Reducer};
+const SCPViewRedux = {Action, Reducer, name: 'SCPViewRedux'};
+export default SCPViewRedux;

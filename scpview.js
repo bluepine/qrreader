@@ -1,17 +1,22 @@
-import {PropTypes} from 'react';
-import { connect } from 'react-redux';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {Text} from 'react-native';
+import SCPViewRedux from './scpview.redux.js'
+import {Styles} from './res.js';
 const SCPView = {};
 const _scpView = (
     {msg}) => {
-        return <Text style={styles.welcome}>SCP View is in unknown state</Text>;
+        return <Text style={Styles.welcome}>SCP View is in unknown state</Text>;
     };
+_scpView.propTypes = {
+    stateMap: React.PropTypes.objectPropTypes
+};
 SCPView = connect(
-    (state) => ({
-    }),
+    (state) => {
+        console.log(state);
+        return {};
+    },
     (dispatch) => ({
     })
 )(_scpView);
-_scpView.propTypes = {
-    msg: PropTypes.string.isRequired
-};
 export default SCPView;

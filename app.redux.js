@@ -23,7 +23,8 @@ const Action = {
     camPermission : (granted) => ({type: AT.CAM_PERM_CHANGE, payload: granted}),
     qrcode : (msg) => ({type: AT.QRCODE, payload: msg}),
     qrview : () => ({type: AT.QRVIEW}),
-    menu : () => ({type: AT.MENU})
+    menu : () => ({type: AT.MENU}),
+    sendcode : () => ({type: AT.SENDCODE})
 };
 
 ///////////reducers and inital state
@@ -38,4 +39,5 @@ const Reducer = generateReducer(
     {camPerm: false, op: OT.MENU, qrcode:null}
 );
 
-export {OT, Action, Reducer};
+const AppRedux = {OT, Action, Reducer, name: 'AppRedux'};
+export default AppRedux;

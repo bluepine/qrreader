@@ -1,19 +1,19 @@
 'use strict';
-import {OT, Resource, Action, Reducer} from './app.redux.js';
+import AppRedux from './app.redux.js';
 
 test('reducer', ()=>{
     expect(
-        Reducer(undefined, {})
+        AppRedux.Reducer(undefined, {})
     ).toEqual(
         {"camPerm": false, "op": "menu", "qrcode": null}
     );
     expect(
-        Reducer({}, Action.camPermission(true))
+        AppRedux.Reducer({}, AppRedux.Action.camPermission(true))
     ).toEqual(
         { camPerm: true }
     );
     expect(
-        Reducer(Reducer(undefined, {}), Action.camPermission(true))
+        AppRedux.Reducer(AppRedux.Reducer(undefined, {}), AppRedux.Action.camPermission(true))
     ).toEqual(
         {"camPerm": true, "op": "menu", "qrcode": null}
     );

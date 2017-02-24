@@ -4,7 +4,8 @@ import {
     Text,
     View,
     TextInput,
-    Button
+    Button,
+    ScrollView
 } from 'react-native';
 import SCPViewRedux from './scpview.redux.js'
 import {Styles} from './res.js';
@@ -12,8 +13,9 @@ import {newState} from './lib.js'
 
 const _scpView = ({op, msg, host, path, success, error, password,
                    onSendBtnClicked, onHostGiven, onPathGiven, onPasswordGiven}) => {
+                       const input = op == SCPViewRedux.OT.INPUT
                        let sendOrSending = null;
-                       if (op == SCPViewRedux.OT.INPUT) {
+                       if (input) {
                            sendOrSending = (
                                <Button
                                    onPress={onSendBtnClicked}
@@ -27,28 +29,28 @@ const _scpView = ({op, msg, host, path, success, error, password,
                        }
 
                        const ret = (
-                           <View style={Styles.container}>
+                           <ScrollView contentContainerStyle={Styles.container}>
                                <Text style={Styles.welcome}>{'Message to send:\n'}{msg}</Text>
                                <View style={{flexDirection:'row'}}>
-                                   <TextInput placeholder='host' style={Styles.input} editable = {true}
+                                   <TextInput placeholder='host' style={Styles.input} editable = {input}
                                               onChangeText={onHostGiven}
                                               value={host}
                                    />
                                </View>
                                <View style={{flexDirection:'row'}}>
-                                   <TextInput placeholder='path' style={Styles.input} editable = {true}
+                                   <TextInput placeholder='path' style={Styles.input} editable = {input}
                                               onChangeText={onPathGiven}
                                               value={path}
                                    />
                                </View>
                                <View style={{flexDirection:'row'}}>
-                                   <TextInput placeholder='password' style={Styles.input} editable = {true}
+                                   <TextInput placeholder='password' style={Styles.input} editable = {input} secureTextEntry = {true}
                                               onChangeText={onPasswordGiven}
                                               value={password}
                                    />
                                </View>
                                {sendOrSending}
-                           </View>
+                           </ScrollView>
                        );
                        return ret;
                    };

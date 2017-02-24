@@ -11,9 +11,8 @@ import {
     AppRegistry,
     Text,
     View,
-    ToastAndroid,
-    PermissionsAndroid,
-    BackAndroid
+    BackAndroid,
+    ScrollView
 } from 'react-native';
 import createLogger from 'redux-logger';
 import {requestCameraPermission} from './lib.android.js'
@@ -47,7 +46,7 @@ const _app = (
          }
          if (currentOperation === AppRedux.OT.MENU) {
              return (
-                 <View style={Styles.container}>
+                 <ScrollView contentContainerStyle={Styles.container}>
                      <Text style={Styles.welcome}>
                          {qrcodeText}
                      </Text>
@@ -61,7 +60,7 @@ const _app = (
                          onPress={onSendQrCodeButtonClicked}
                          title="Send QR code"
                      />
-                 </View>
+                 </ScrollView>
              )
          }
 

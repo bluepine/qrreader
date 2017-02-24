@@ -1,59 +1,81 @@
 'use strict';
-import {OT, Resource, Action, Reducer} from './pojo.js';
+import {Resource, Styles} from './res.js'
+import SCPViewRedux from './scpview.redux.js'
+import AppRedux from './app.redux.js'
 ////////////////////////react native dependency starts here
-import QRView from './qrview.js';
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import React, {Component, PropTypes} from 'react';
 import { connect, Provider } from 'react-redux';
 import {
     Button,
     AppRegistry,
-    StyleSheet,
     Text,
     View,
-    ToastAndroid,
-    PermissionsAndroid,
-    BackAndroid
+    BackAndroid,
+    ScrollView
 } from 'react-native';
-import './pojo.js';
+import createLogger from 'redux-logger';
+import {requestCameraPermission} from './lib.android.js'
+import QRView from './qrview.js';
+import SCPView from './scpview.js'
 
+////////////control flags
+const LOG_REDUX = false;
 ////////////components
 
-const _app = ({camPermissionGranted,
-               currentOperation,
-               onCamPermissionGranted,
-               onQrCodeDecoded,
-               qrcodeText,
-               onStartQrViewButtonClicked}) => {
-    if (!camPermissionGranted) {
-        requestCameraPermission(onCamPermissionGranted);
-        return <Text style={styles.instructions}>{Resource.CAM_PERMISSION_REQUEST_MSG}</Text>
-    }
-    if (currentOperation === OT.QRVIEW) {
-        return <QRView
-                   style={styles.container}
-                   onQrCodeDecoded={onQrCodeDecoded}
-               />
-    }
-    if (currentOperation === OT.MENU) {
-        return (
-        <View style={styles.container}>
-        <Text style={styles.welcome}>
-         {qrcodeText}
-        </Text>
-        <Button
-            onPress={onStartQrViewButtonClicked}
-            title="Scan QR code"
-            color="#841584"
-            accessibilityLabel="Scan QR code"
-        />
-        </View>
-        )
-    }
+const _app = (
+    {camPermissionGranted,
+     currentOperation,
+     onCamPermissionGranted,
+     onQrCodeDecoded,
+     qrcodeText,
+     onStartQrViewButtonClicked,
+     onSendQrCodeButtonClicked}) => {
+         if (!camPermissionGranted) {
+             requestCameraPermission(onCamPermissionGranted);
+             return (
+                 <Text style={Styles.instructions}>{Resource.CAM_PERMISSION_REQUEST_MSG}</Text>
+             )
+         }
+         if (currentOperation === AppRedux.OT.QRVIEW) {
+             return (
+                 <QRView
+                     style={Styles.container}
+                     onQrCodeDecoded={onQrCodeDecoded}
+                 />
+             )
+         }
+         if (currentOperation === AppRedux.OT.MENU) {
+             return (
+                 <ScrollView contentContainerStyle={Styles.container}>
+                     <Text style={Styles.welcome}>
+                         {qrcodeText}
+                     </Text>
+                     <Text style={Styles.welcome}>-----</Text>
+                     <Button
+                         onPress={onStartQrViewButtonClicked}
+                         title="Scan QR code"
+                     />
+                     <Text style={Styles.welcome}>-----</Text>
+                     <Button
+                         onPress={onSendQrCodeButtonClicked}
+                         title="Send QR code"
+                     />
+                 </ScrollView>
+             )
+         }
 
-    return <Text style={styles.welcome}>App is in unknown state</Text>
+         if (currentOperation === AppRedux.OT.SENDCODE) {
+             return (
+                 <SCPView/>
+             )
+         }
 
-};
+         return (
+             <Text style={Styles.welcome}>App is in unknown state</Text>
+         )
+
+     };
 
 _app.propTypes = {
     camPermissionGranted: PropTypes.bool.isRequired,
@@ -61,26 +83,45 @@ _app.propTypes = {
     qrcodeText: PropTypes.string.isRequired,
     onCamPermissionGranted: PropTypes.func.isRequired,
     onQrCodeDecoded: PropTypes.func.isRequired,
-    onStartQrViewButtonClicked: PropTypes.func.isRequired
+    onStartQrViewButtonClicked: PropTypes.func.isRequired,
+    onSendQrCodeButtonClicked: PropTypes.func.isRequired
 };
+
+const onQrCodeDecoded = dispatch => msg => {dispatch(AppRedux.Action.qrcode(msg)), dispatch(SCPViewRedux.Action.init(msg))};
 
 const App = connect(
     (state) => ({
-        camPermissionGranted : state.camPerm,
-        currentOperation: state.op,
-        qrcodeText: state.qrcode === null ? 'No qrcode scanned' :`last scanned qrcode: ${state.qrcode}`
+        camPermissionGranted : state[AppRedux.Name].camPerm,
+        currentOperation: state[AppRedux.Name].op,
+        qrcodeText: state[AppRedux.Name].qrcode === null ? 'No qrcode scanned' :`last scanned qrcode: ${state[AppRedux.Name].qrcode}`
     }),
     (dispatch) => ({
-        onCamPermissionGranted: (granted) => dispatch(Action.camPermission(granted)),
-        onQrCodeDecoded: (msg) => dispatch(Action.qrcode(msg)),
-        onStartQrViewButtonClicked: () => dispatch(Action.qrview())
+        onCamPermissionGranted: (granted) => dispatch(AppRedux.Action.camPermission(granted)),
+        onQrCodeDecoded: onQrCodeDecoded(dispatch),
+        onStartQrViewButtonClicked: () => dispatch(AppRedux.Action.qrview()),
+        onSendQrCodeButtonClicked: () => dispatch(AppRedux.Action.sendcode())
     })
 )(_app);
 
 ///////////fire it up
-const store = createStore(Reducer);
+const store = createStore(combineReducers({
+    [AppRedux.Name]: AppRedux.Reducer,
+    [SCPViewRedux.Name]: SCPViewRedux.Reducer
+}),
+                          LOG_REDUX ? applyMiddleware(createLogger()) : undefined
+);
+
+//testing steps
+/* store.dispatch(AppRedux.Action.camPermission(true))
+ * onQrCodeDecoded(store.dispatch)('testcode')
+ * store.dispatch(AppRedux.Action.sendcode())
+ * store.dispatch(SCPViewRedux.Action.password('pass'))
+ * store.dispatch(SCPViewRedux.Action.host('user@host'))
+ * store.dispatch(SCPViewRedux.Action.path('/home/user/file'))
+ * store.dispatch(SCPViewRedux.Action.send())
+ * */
 console.log(store.getState())
-BackAndroid.addEventListener('hardwareBackPress', () => store.dispatch(Action.menu()));
+BackAndroid.addEventListener('hardwareBackPress', () => store.dispatch(AppRedux.Action.menu()));
 
 export default class qrcode_scanner extends Component {
     render() {
@@ -92,49 +133,3 @@ export default class qrcode_scanner extends Component {
     };
 }
 AppRegistry.registerComponent('qrcode_scanner', () => qrcode_scanner);
-
-
-
-
-
-//////////lower level operations
-async function requestCameraPermission(callback) {
-    try {
-        const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.CAMERA,
-            {
-                'title': 'QRCode scanner App Camera Permission',
-                'message': Resource.CAM_PERMISSION_REQUEST_MSG
-            }
-        )
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log("You can use the camera")
-            callback(true)
-        } else {
-            console.log("Camera permission denied")
-            callback(false)
-        }
-    } catch (err) {
-        console.warn(err)
-    }
-}
-
-
-/////////styles
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5
-    }
-});

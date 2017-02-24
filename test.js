@@ -1,19 +1,25 @@
-import {OT, Resource, Action, Reducer} from './pojo.js';
-
+'use strict';
+import AppRedux from './app.redux.js';
+import SCPViewRedux from './scpview.redux.js';
 test('reducer', ()=>{
     expect(
-        Reducer(undefined, {})
+        AppRedux.Reducer(undefined, {type: null})
     ).toEqual(
         {"camPerm": false, "op": "menu", "qrcode": null}
     );
     expect(
-        Reducer({}, Action.camPermission(true))
+        AppRedux.Reducer({}, AppRedux.Action.camPermission(true))
     ).toEqual(
         { camPerm: true }
     );
     expect(
-        Reducer(Reducer(undefined, {}), Action.camPermission(true))
+        AppRedux.Reducer(AppRedux.Reducer(undefined, {type: null}), AppRedux.Action.camPermission(true))
     ).toEqual(
         {"camPerm": true, "op": "menu", "qrcode": null}
+    );
+    expect(
+        SCPViewRedux.Reducer(SCPViewRedux.Reducer(undefined, {type: null}), SCPViewRedux.Action.init('abc'))
+    ).toEqual(
+        {msg: 'abc', op: SCPViewRedux.OT.INPUT, host: null, path: null, success: false, error: null, password: null}
     );
 });

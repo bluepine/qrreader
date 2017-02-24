@@ -19,7 +19,8 @@ import {requestCameraPermission} from './lib.android.js'
 import QRView from './qrview.js';
 import SCPView from './scpview.js'
 
-
+////////////control flags
+const LOG_REDUX = false;
 ////////////components
 
 const _app = (
@@ -107,7 +108,7 @@ const store = createStore(combineReducers({
     [AppRedux.Name]: AppRedux.Reducer,
     [SCPViewRedux.Name]: SCPViewRedux.Reducer
 }),
-                          applyMiddleware(createLogger())
+                          LOG_REDUX ? applyMiddleware(createLogger()) : undefined
 );
 
 //testing steps

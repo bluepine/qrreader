@@ -34,7 +34,7 @@ const Reducer = generateReducer(
         [AT.MENU] : (state, action) => (newState(state, {op: OT.MENU})),
         [AT.QRVIEW] : (state, action) => (newState(state, {op: OT.QRVIEW})),
         [AT.QRCODE] : (state, action) => (newState(state, {qrcode: action.payload, op: OT.MENU})),
-        [AT.SENDCODE] : (state, action) => (state.qrcode == null ? state : newState(state, {qrcode: action.payload, op: OT.SENDCODE}))
+        [AT.SENDCODE] : (state, action) => (state.qrcode == null ? state : newState(state, {qrcode: state.qrcode, op: OT.SENDCODE}))
     },
     {camPerm: false, op: OT.MENU, qrcode: null}
 );

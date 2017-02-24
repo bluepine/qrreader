@@ -1,3 +1,4 @@
+import {connect} from 'react-redux';
 const generateReducer = (handlers, initState) => (state = initState, action)  => {
     if (!action.hasOwnProperty('type')) {
         console.log('no type in action');
@@ -16,4 +17,6 @@ function applyName(name, input) {
     }
     return tmp;
 }
+
+const mapStateToProps = (name) => state => (newState(state[name]));
 export {generateReducer, newState, applyName};

@@ -33,13 +33,17 @@ const _app = (
      onSendQrCodeButtonClicked}) => {
          if (!camPermissionGranted) {
              requestCameraPermission(onCamPermissionGranted);
-             return <Text style={Styles.instructions}>{Resource.CAM_PERMISSION_REQUEST_MSG}</Text>
+             return (
+                 <Text style={Styles.instructions}>{Resource.CAM_PERMISSION_REQUEST_MSG}</Text>
+             )
          }
          if (currentOperation === AppRedux.OT.QRVIEW) {
-             return <QRView
-                        style={Styles.container}
-                        onQrCodeDecoded={onQrCodeDecoded}
-                    />
+             return (
+                 <QRView
+                     style={Styles.container}
+                     onQrCodeDecoded={onQrCodeDecoded}
+                 />
+             )
          }
          if (currentOperation === AppRedux.OT.MENU) {
              return (
@@ -67,7 +71,9 @@ const _app = (
              )
          }
 
-         return <Text style={Styles.welcome}>App is in unknown state</Text>
+         return (
+             <Text style={Styles.welcome}>App is in unknown state</Text>
+         )
 
      };
 

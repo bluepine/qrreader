@@ -14,36 +14,43 @@ const _scpView = ({op, msg, host, path, success, error, password,
                    onSendBtnClicked, onHostGiven, onPathGiven, onPasswordGiven}) => {
                        let sendOrSending = null;
                        if (op == SCPViewRedux.OT.INPUT) {
-                           sendOrSending = <Button
-                                               onPress={onSendBtnClicked}
-                                               title="Send"
-                                           />
+                           sendOrSending = (
+                               <Button
+                                   onPress={onSendBtnClicked}
+                                   title="Send"
+                               />
+                           )
                        } else {
-                           sendOrSending = <Text style={Styles.welcome}>Sending</Text>
+                           sendOrSending = (
+                               <Text style={Styles.welcome}>Sending</Text>
+                           )
                        }
 
-                       return <View style={Styles.container}>
-                       <Text style={Styles.welcome}>{'Message to send:\n'}{msg}</Text>
-                       <View style={{flexDirection:'row'}}>
-                       <TextInput placeholder='host' style={Styles.input} editable = {true}
-                       onChangeText={onHostGiven}
-                       value={host}
-                       />
-                       </View>
-                       <View style={{flexDirection:'row'}}>
-                       <TextInput placeholder='path' style={Styles.input} editable = {true}
-                       onChangeText={onPathGiven}
-                       value={path}
-                       />
-                       </View>
-                       <View style={{flexDirection:'row'}}>
-                       <TextInput placeholder='password' style={Styles.input} editable = {true}
-                       onChangeText={onPasswordGiven}
-                       value={password}
-                       />
-                       </View>
-                       {sendOrSending}
-                       </View>
+                       const ret = (
+                           <View style={Styles.container}>
+                               <Text style={Styles.welcome}>{'Message to send:\n'}{msg}</Text>
+                               <View style={{flexDirection:'row'}}>
+                                   <TextInput placeholder='host' style={Styles.input} editable = {true}
+                                              onChangeText={onHostGiven}
+                                              value={host}
+                                   />
+                               </View>
+                               <View style={{flexDirection:'row'}}>
+                                   <TextInput placeholder='path' style={Styles.input} editable = {true}
+                                              onChangeText={onPathGiven}
+                                              value={path}
+                                   />
+                               </View>
+                               <View style={{flexDirection:'row'}}>
+                                   <TextInput placeholder='password' style={Styles.input} editable = {true}
+                                              onChangeText={onPasswordGiven}
+                                              value={password}
+                                   />
+                               </View>
+                               {sendOrSending}
+                           </View>
+                       );
+                       return ret;
                    };
 _scpView.propTypes = {
     msg: PropTypes.string.isRequired,

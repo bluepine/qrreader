@@ -49,7 +49,7 @@ const _app = (
              return (
                  <ScrollView contentContainerStyle={Styles.container}>
                      <Text style={Styles.welcome}>
-                         {qrcodeText}
+                         {qrcodeText.length > 100 ? qrcodeText.substring(0, 100) + '...' : qrcodeText}
                      </Text>
                      <Text style={Styles.welcome}>-----</Text>
                      <Button

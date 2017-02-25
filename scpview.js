@@ -54,7 +54,7 @@ const _scpView = ({op, msg, host, path, success, error, password,
 
                        const ret = (
                            <ScrollView contentContainerStyle={Styles.container}>
-                               <Text style={Styles.welcome}>{'Message to send through ssh:\n'}{msg}</Text>
+                               <Text style={Styles.welcome}>{'Message to send through ssh:\n'}{msg.length > 100 ? msg.substring(0, 100) + '...' : msg}</Text>
                                {errorMsg}
                                <View style={{flexDirection:'row'}}>
                                    <TextInput placeholder='user@host' style={Styles.input} editable = {input}
